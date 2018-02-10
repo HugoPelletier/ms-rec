@@ -1,0 +1,22 @@
+version: '2'
+services:
+  ms-rec:
+    build: ./
+    volumes:
+     - .:/code:rw
+    command: gunicorn engine:app -b 0.0.0.0:5000 --workers=8 --reload
+    environment:
+        DEBUG: 'true'
+        ENVIRONMENT: 'dev'
+        REDIS_HOST: ms-rec-redis
+        REDIS_PORT: '6379'
+        REDIS_DATABASE: '5'
+    links:
+      - ms-rec-redis
+    ports:
+      - "5000:5000"
+
+  ms-rec-redis:
+    image: redis:3.0.7
+    ports:
+      - "6399:6379"
